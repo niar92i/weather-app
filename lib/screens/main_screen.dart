@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/controllers/main_screen_controller.dart';
 import 'package:weather_app/screens/five_day_weather_forecast_screen.dart';
 import 'package:weather_app/screens/loading_screen.dart';
+import 'package:weather_app/services/five_day_weather_forecasts_service.dart';
 import 'package:weather_app/utils/my_utils.dart';
-import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/services/current_weather_service.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+import '../data/constants/const.dart';
 import '../data/models/region_weather_model.dart';
-
-enum MenuItem { fiveDayWeatherForecast, quit }
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.weatherData});
 
-  final WeatherData weatherData;
+  final CurrentWeatherService weatherData;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
     updateDisplayInfo(widget.weatherData);
   }
 
-  void updateDisplayInfo(WeatherData weatherData) {
+  void updateDisplayInfo(CurrentWeatherService weatherData) {
     setState(() {
       mainScreenController.temperature = weatherData.currentTemperature.round();
       mainScreenController.humidity = weatherData.currentHumidity.round();

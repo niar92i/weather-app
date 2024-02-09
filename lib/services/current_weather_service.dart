@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:weather_app/utils/location.dart';
 
-const apiKey = '8b46867d4c29461a7f27c8ffbad0b288';
+import '../data/constants/const.dart';
 
-class WeatherData {
-  WeatherData({required this.locationData});
+class CurrentWeatherService {
+  CurrentWeatherService({required this.locationData});
 
   LocationHelper locationData;
+
+  late String data;
+
   late double currentTemperature;
   late int currentHumidity;
   late double currentFeelsLikeTemperature;
@@ -23,11 +26,11 @@ class WeatherData {
 
   Future<void> getCurrentWeather() async {
 
-    Response response = await get(Uri.parse('http://api.openweathermap.org/data/2.5/weather?lat=${locationData.latitude}&lon=${locationData.longitude}&appid=${apiKey}&units=metric')
+    Response response = await get(Uri.parse('http://api.openweathermap.org/data/2.5/weather?lat=${locationData.latitude}&lon=${locationData.longitude}&appid=$apiKey&units=metric')
         );
 
     if (response.statusCode == 200) {
-      String data = response.body;
+      data = response.body;
       var currentWeather = jsonDecode(data);
 
       try {

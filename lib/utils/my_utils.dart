@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import '../data/constants/const.dart';
 import '../data/models/region_weather_model.dart';
 import 'location.dart';
-
-const apiKey = '8b46867d4c29461a7f27c8ffbad0b288';
 
 class MyUtils {
   static late LocationHelper locationData;
