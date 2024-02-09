@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:weather_app/controllers/loading_screen_controller.dart';
 import 'package:weather_app/screens/main_screen.dart';
-import 'package:weather_app/utils/location.dart';
 import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/utils/my_utils.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -14,8 +13,6 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
 
-  LoadingScreenController loadingScreenController = LoadingScreenController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -24,9 +21,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getWeatherData() async {
-    await loadingScreenController.getLocationData();
+    await MyUtils.getLocationData();
 
-    WeatherData weatherData = WeatherData(locationData: loadingScreenController.locationData);
+    WeatherData weatherData = WeatherData(locationData: MyUtils.locationData);
     await weatherData.getCurrentWeather();
 
     if (weatherData.currentTemperature == null) {

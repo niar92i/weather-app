@@ -1,13 +1,24 @@
-
 import 'dart:convert';
-
 import 'package:http/http.dart';
-
 import '../data/models/region_weather_model.dart';
+import 'location.dart';
 
 const apiKey = '8b46867d4c29461a7f27c8ffbad0b288';
 
 class MyUtils {
+  static late LocationHelper locationData;
+
+  static Future<void> getLocationData() async {
+    locationData = LocationHelper();
+    await locationData.getCurrentLocation();
+
+    if (locationData.latitude == null || locationData.longitude == null) {
+      // TODO : Handle no location
+    }
+
+    print(locationData.longitude);
+    print(locationData.latitude);
+  }
 
   static Future<List<RegionWeatherModel>> fetchCountryWeatherData(
       List<String> latitudes, List<String> longitudes) async {

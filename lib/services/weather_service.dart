@@ -1,17 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:weather_app/utils/location.dart';
 
 const apiKey = '8b46867d4c29461a7f27c8ffbad0b288';
-
-class WeatherDisplayData {
-  Icon weatherIcon;
-  AssetImage weatherImage;
-
-  WeatherDisplayData({required this.weatherIcon, required this.weatherImage});
-}
 
 class WeatherData {
   WeatherData({required this.locationData});
@@ -56,7 +47,7 @@ class WeatherData {
         print(e);
       }
     } else {
-      print('Could not fetch temperature!');
+      print('Could not fetch weather data');
     }
   }
 }
