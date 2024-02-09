@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class FiveDayWeatherForecast extends StatefulWidget {
-  const FiveDayWeatherForecast({super.key});
+class FiveDayWeatherForecastScreen extends StatefulWidget {
+  const FiveDayWeatherForecastScreen({super.key});
 
   @override
-  State<FiveDayWeatherForecast> createState() => _FiveDayWeatherForecastState();
+  State<FiveDayWeatherForecastScreen> createState() => _FiveDayWeatherForecastScreenState();
 }
 
-class _FiveDayWeatherForecastState extends State<FiveDayWeatherForecast> {
+class _FiveDayWeatherForecastScreenState extends State<FiveDayWeatherForecastScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +24,7 @@ class _FiveDayWeatherForecastState extends State<FiveDayWeatherForecast> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text('5 days weather forecasts'),
+          title: const Text('5 days weather forecasts', style: TextStyle(fontSize: 16),),
           // centerTitle: true,
         ),
         backgroundColor: Colors.transparent,

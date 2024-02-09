@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:weather_app/controllers/loading_screen_controller.dart';
 import 'package:weather_app/screens/main_screen.dart';
 import 'package:weather_app/utils/location.dart';
-import 'package:weather_app/utils/weather_data.dart';
+import 'package:weather_app/services/weather_service.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -12,24 +13,20 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  late LocationHelper locationData;
 
-  Future<void> getLocationData() async {
-    locationData = LocationHelper();
-    await locationData.getCurrentLocation();
+  LoadingScreenController loadingScreenController = LoadingScreenController();
 
-    if (locationData.latitude == null || locationData.longitude == null) {
-      // TODO : Handle no location
-    }
-
-    print(locationData.longitude);
-    print(locationData.latitude);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getWeatherData();
   }
-  
+
   void getWeatherData() async {
-    await getLocationData();
-    
-    WeatherData weatherData = WeatherData(locationData: locationData);
+    await loadingScreenController.getLocationData();
+
+    WeatherData weatherData = WeatherData(locationData: loadingScreenController.locationData);
     await weatherData.getCurrentWeather();
 
     if (weatherData.currentTemperature == null) {
@@ -37,18 +34,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) {
-        return MainScreen(weatherData: weatherData);
-      })
+        context,
+        MaterialPageRoute(builder: (context) {
+          return MainScreen(weatherData: weatherData);
+        })
     );
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getWeatherData();
   }
 
   @override

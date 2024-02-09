@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/controllers/main_screen_controller.dart';
-import 'package:weather_app/screens/five_day_weather_forecast.dart';
+import 'package:weather_app/screens/five_day_weather_forecast_screen.dart';
 import 'package:weather_app/screens/loading_screen.dart';
-import 'package:weather_app/utils/country_weather_data.dart';
 import 'package:weather_app/utils/my_utils.dart';
-import 'package:weather_app/utils/weather_data.dart';
+import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 import '../data/models/region_weather_model.dart';
@@ -50,17 +49,6 @@ class _MainScreenState extends State<MainScreen> {
       mainScreenController.cloudsDensity = weatherData.currentCloudsDensity;
       mainScreenController.sunriseUnix = weatherData.sunrise;
       mainScreenController.sunsetUnix = weatherData.sunset;
-    });
-  }
-
-  void updateDisplayInfoCountry(CountryWeatherData weatherData) {
-    setState(() {
-      mainScreenController.countryTemperature =
-          weatherData.currentTemperature.round();
-      mainScreenController.countryWeatherDescription =
-          weatherData.currentDescription[0].toUpperCase() +
-              weatherData.currentDescription.substring(1);
-      mainScreenController.countryIconLink = weatherData.currentIcon;
     });
   }
 
@@ -129,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
               } else if (item == MenuItem.fiveDayWeatherForecast) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const FiveDayWeatherForecast(),
+                    builder: (context) => const FiveDayWeatherForecastScreen(),
                   ),
                 );
               }
