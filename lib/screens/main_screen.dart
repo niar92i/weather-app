@@ -12,6 +12,7 @@ import 'package:weather_icons/weather_icons.dart';
 
 import '../data/constants/const.dart';
 import '../data/models/region_weather_model.dart';
+import '../data/models/weather_forecast_model.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.weatherData});
@@ -117,7 +118,7 @@ class _MainScreenState extends State<MainScreen> {
               } else if (item == MenuItem.fiveDayWeatherForecast) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const FiveDayWeatherForecastScreen(),
+                    builder: (context) => FiveDayWeatherForecastScreen(weatherForecastsDataList: MyUtils.getFiveDayWeatherForecast(),),
                   ),
                 );
               }

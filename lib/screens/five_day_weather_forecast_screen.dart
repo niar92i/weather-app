@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/controllers/five_day_weather_forecast_controller.dart';
 import 'package:weather_app/services/five_day_weather_forecasts_service.dart';
 
+import '../data/models/weather_forecast_model.dart';
 import '../utils/my_utils.dart';
 
 class FiveDayWeatherForecastScreen extends StatefulWidget {
-  const FiveDayWeatherForecastScreen({super.key});
+  const FiveDayWeatherForecastScreen({super.key, required this.weatherForecastsDataList});
+  final Future<List<WeatherForecastModel>> weatherForecastsDataList;
 
   @override
   State<FiveDayWeatherForecastScreen> createState() => _FiveDayWeatherForecastScreenState();
@@ -15,27 +17,10 @@ class _FiveDayWeatherForecastScreenState extends State<FiveDayWeatherForecastScr
 
   FiveDayWeatherForecastController fiveDayWeatherForecastController = FiveDayWeatherForecastController();
 
-  late FiveDayWeatherForecastsService weatherForecastsData;
-
   @override
   void initState() {
     // TODO: implement initState
-    getFiveDayWeatherForecast();
     super.initState();
-  }
-
-  void getFiveDayWeatherForecast() async {
-    weatherForecastsData = FiveDayWeatherForecastsService(locationData: MyUtils.locationData);
-    await weatherForecastsData.getFiveDayWeatherForecasts();
-
-    if (weatherForecastsData.data == null) {
-      // TODO : Handle no data
-    } else {
-      fiveDayWeatherForecastController.weatherForecastsData = weatherForecastsData.forecasts;
-      for (var forecast in fiveDayWeatherForecastController.weatherForecastsData) {
-        print('Date/Time: ${forecast.dateTimeUnix}, Temperature: ${forecast.iconCode}, Weather: ${forecast.weatherDescription}, Icon: ${forecast.temperature}');
-      }
-    }
   }
 
   @override
@@ -58,6 +43,59 @@ class _FiveDayWeatherForecastScreenState extends State<FiveDayWeatherForecastScr
           // centerTitle: true,
         ),
         backgroundColor: Colors.transparent,
+        body:
+        FutureBuilder<List<WeatherForecastModel>>(
+          future: widget.weatherForecastsDataList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Erreur: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('Aucune donnée trouvée');
+            } else {
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return WeatherForecastCard(snapshot.data![index]);
+                },
+              );
+            }
+          },
+        ),
+
+
+
+
+        ),
+    );
+  }
+}
+
+class WeatherForecastCard extends StatelessWidget {
+  final WeatherForecastModel weatherForecast;
+
+  const WeatherForecastCard(this.weatherForecast, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text('Date/Time: ${weatherForecast.formattedDateTime}'),
+            Text('Temperature: ${weatherForecast.temperature}'),
+            Text('Weather: ${weatherForecast.weatherDescription}'),
+            Text('Icon: ${weatherForecast.iconCode}'),
+          ],
+        ),
       ),
     );
   }

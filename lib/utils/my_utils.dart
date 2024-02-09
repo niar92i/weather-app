@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import '../data/constants/const.dart';
 import '../data/models/region_weather_model.dart';
+import '../data/models/weather_forecast_model.dart';
+import '../services/five_day_weather_forecasts_service.dart';
 import 'location.dart';
 
 class MyUtils {
@@ -39,5 +41,23 @@ class MyUtils {
       }
     }
     return countryWeatherList;
+  }
+
+  static Future<List<WeatherForecastModel>> getFiveDayWeatherForecast() async {
+    FiveDayWeatherForecastsService weatherForecastsData = FiveDayWeatherForecastsService(locationData: MyUtils.locationData);
+    await weatherForecastsData.getFiveDayWeatherForecasts();
+
+    if (weatherForecastsData.data == null) {
+      // TODO : Handle no data
+      throw 'No data';
+    } else {
+      return weatherForecastsData.forecasts;
+      // setState(() {
+      //   weatherForecastsDataList = weatherForecastsData.forecasts;
+      // });
+      // for (var forecast in weatherForecastsDataList!) {
+      //   print('Date/Time: ${forecast.dateTimeUnix}, Temperature: ${forecast.iconCode}, Weather: ${forecast.weatherDescription}, Icon: ${forecast.temperature}');
+      // }
+    }
   }
 }
