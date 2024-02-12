@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/controllers/main_screen_controller.dart';
 import 'package:weather_app/screens/five_day_weather_forecast_screen.dart';
 import 'package:weather_app/screens/loading_screen.dart';
-import 'package:weather_app/services/five_day_weather_forecasts_service.dart';
 import 'package:weather_app/utils/my_utils.dart';
 import 'package:weather_app/services/current_weather_service.dart';
 import 'package:weather_icons/weather_icons.dart';
-
 import '../data/constants/const.dart';
 import '../data/models/region_weather_model.dart';
-import '../data/models/weather_forecast_model.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.weatherData});
@@ -118,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
               } else if (item == MenuItem.fiveDayWeatherForecast) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => FiveDayWeatherForecastScreen(weatherForecastsDataList: MyUtils.getFiveDayWeatherForecast(),),
+                    builder: (context) => FiveDayWeatherForecastScreen(weatherForecastsDataList: MyUtils.getFiveDayWeatherForecast(), weatherData: widget.weatherData,),
                   ),
                 );
               }
@@ -198,12 +195,15 @@ class _MainScreenState extends State<MainScreen> {
                       Positioned(
                         bottom: -5,
                         right: 50,
-                        child: Image.network(
-                          'https://openweathermap.org/img/wn/${mainScreenController.iconCode}@2x.png',
-                          fit: BoxFit.contain,
-                          width: 125,
-                          height: 125,
-                          // scale: ,
+                        child: Opacity(
+                          opacity: 0.8,
+                          child: Image.network(
+                            'https://openweathermap.org/img/wn/${mainScreenController.iconCode}@2x.png',
+                            fit: BoxFit.contain,
+                            width: 125,
+                            height: 125,
+                            // scale: ,
+                          ),
                         ),
                       ),
                     ],

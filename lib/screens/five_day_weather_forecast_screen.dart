@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/controllers/five_day_weather_forecast_controller.dart';
-import 'package:weather_app/controllers/main_screen_controller.dart';
+import 'package:weather_icons/weather_icons.dart';
 import '../data/models/weather_forecast_model.dart';
 import '../services/current_weather_service.dart';
 
 class FiveDayWeatherForecastScreen extends StatefulWidget {
   const FiveDayWeatherForecastScreen(
-      {super.key, required this.weatherForecastsDataList,});
+      {super.key, required this.weatherForecastsDataList, required this.weatherData});
 
   final Future<List<WeatherForecastModel>> weatherForecastsDataList;
+  final CurrentWeatherService weatherData;
 
   @override
   State<FiveDayWeatherForecastScreen> createState() =>
@@ -18,15 +19,33 @@ class FiveDayWeatherForecastScreen extends StatefulWidget {
 
 class _FiveDayWeatherForecastScreenState
     extends State<FiveDayWeatherForecastScreen> {
+
   FiveDayWeatherForecastController fiveDayWeatherForecastController =
       FiveDayWeatherForecastController();
 
-  MainScreenController mainScreenController = MainScreenController();
+  late String currentIconCode;
+  late String currentDescription;
+  late int currentTemperature;
+  late int currentCloudsDensity;
+  late int currentHumidity;
+  late int currentWindSpeed;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    updateInfoWeather(widget.weatherData);
+  }
+
+  void updateInfoWeather(CurrentWeatherService weatherData) {
+    setState(() {
+      currentIconCode = weatherData.currentIconCode;
+      currentTemperature = weatherData.currentTemperature.round();
+      currentDescription = weatherData.currentDescription;
+      currentCloudsDensity = weatherData.currentCloudsDensity;
+      currentHumidity = weatherData.currentHumidity;
+      currentWindSpeed = weatherData.currentWindSpeed.round();
+    });
   }
 
   @override
@@ -57,7 +76,7 @@ class _FiveDayWeatherForecastScreenState
             Container(
               margin: const EdgeInsets.all(25),
               width: double.infinity,
-              height: 250,
+              height: 300,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 color: Colors.deepPurple.withOpacity(0.3),
@@ -66,15 +85,85 @@ class _FiveDayWeatherForecastScreenState
                 children: [
                   Row(
                     children: [
-                      Stack(
+                      SizedBox(
+                        // color: Colors.white,
+                        width: 175,
+                        height: 175,
+                        child: Stack(
+                          children: [
+                            Container(
+                              alignment: Alignment.bottomRight,
+                                child: Text('$currentTemperature°', style: const TextStyle(fontSize: 65),)),
+                            Opacity(
+                              opacity: 0.8,
+                              child: Image.network(
+                                'https://openweathermap.org/img/wn/$currentIconCode@2x.png',
+                                fit: BoxFit.contain,
+                                width: 150,
+                                height: 150,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Tomorrow'),
+                            const SizedBox(height: 10,),
+                            SizedBox(
+                              width: 125,
+                              child: Text(currentDescription[
+                              0]
+                                  .toUpperCase() +
+                                  currentDescription
+                                      .substring(
+                                      1), overflow: TextOverflow.fade, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          // Image.network(
-                          //   'https://openweathermap.org/img/wn/${weatherData.currentIconCode}@2x.png',
-                          //   fit: BoxFit.contain,
-                          //   width: 125,
-                          //   height: 125,
-                          //   // scale: ,
-                          // ),
+                          const BoxedIcon(WeatherIcons.cloudy, size: 45),
+                          Text(
+                            '$currentCloudsDensity %',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          const Text('Cloudiness'),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const BoxedIcon(WeatherIcons.raindrop, size: 45),
+                          Text(
+                            '$currentHumidity %',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          const Text('Humidity'),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const BoxedIcon(WeatherIcons.strong_wind, size: 45),
+                          Text(
+                            '$currentWindSpeed km/h',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          const Text('Wind speed'),
                         ],
                       ),
                     ],
